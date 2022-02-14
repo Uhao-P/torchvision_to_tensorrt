@@ -14,11 +14,11 @@
 
 + pytorch >= 1.6.0
 
-### install plugin
+### install trt_plugin
 
 ```shell
 git clone git@github.com:Uhao-P/torchvision_to_tensorrt.git
-cd torchvision_to_tensorrt/plugin
+cd torchvision_to_tensorrt/trt_plugin
 mkdir build && cd build
 cmake -DTENSORRT_DIR=${TENSORRT_DIR} ..
 make -j10
