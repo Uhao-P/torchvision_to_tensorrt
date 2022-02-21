@@ -118,32 +118,3 @@ We tested the converter against these models using the [test.sh](torch2trt/test.
 | vgg16_bn      |      4.96      |      12.0       |       58.5       |        140        |
 | vgg19_bn      |                |                 |       51.4       |        121        |
 
-
-
-## How to add (or override) a converter
-
-Here we show how to add a converter for the ``ReLU`` module using the TensorRT
-python API.
-
-```python
-import tensorrt as trt
-from torch2trt import tensorrt_converter
-
-@tensorrt_converter('torch.nn.ReLU.forward')
-def convert_ReLU(ctx):
-    input = ctx.method_args[1]
-    output = ctx.method_return
-    layer = ctx.network.add_activation(input=input._trt, type=trt.ActivationType.RELU)  
-    output._trt = layer.get_output(0)
-```
-
-The converter takes one argument, a ``ConversionContext``, which will contain
-the following
-
-* ``ctx.network`` - The TensorRT network that is being constructed.
-
-* ``ctx.method_args`` - Positional arguments that were passed to the specified PyTorch function.  The ``_trt`` attribute is set for relevant input tensors.
-* ``ctx.method_kwargs`` - Keyword arguments that were passed to the specified PyTorch function.
-* ``ctx.method_return`` - The value returned by the specified PyTorch function.  The converter must set the ``_trt`` attribute where relevant.
-
-Please see [this folder](torch2trt/torch2trt/converters) for more examples.
